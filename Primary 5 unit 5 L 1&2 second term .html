@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Primary 5 Unit 5 | Mr. Moheb Mousa</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --neon-pink: #ff00c1;
+      --neon-blue: #00ffff;
+      --neon-green: #39ff14;
+      --dark-bg: #0d1117;
+      --card-bg: #161b22;
+      --text-color: #f0f6fc;
+      --highlight-color: #ff0;
+      --transition-speed: 0.3s;
+    }
+    body.light-mode {
+      --dark-bg: #f0f6fc;
+      --card-bg: #fff;
+      --text-color: #0d1117;
+      --neon-pink: #d6009a;
+      --neon-blue: #00f;
+      --neon-green: #080;
+      --highlight-color: #ff0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; text-align: right; }
+    body { 
+        background-color: var(--dark-bg);
+        color: var(--text-color); 
+        padding: 20px; 
+        transition: background-color .5s, color .5s; 
+        background-image: linear-gradient(45deg, var(--dark-bg) 0%, #2c3e50 100%);
+        overflow-x: hidden;
+    }
+    header { text-align: center; margin-bottom: 24px; }
+    .header-title { font-size: 2rem; color: var(--neon-blue); text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue); border-bottom: 2px solid var(--neon-pink); display: inline-block; padding: 8px 0; }
+
+    /* Modal Styles */
+    #welcome-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        z-index: 2000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.5s ease;
+    }
+    #welcome-modal-overlay.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+    .welcome-modal-content {
+        background: rgba(22, 27, 34, 0.75);
+        border-radius: 20px;
+        padding: 30px 40px;
+        text-align: center;
+        max-width: 550px;
+        width: 90%;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+        position: relative;
+        overflow: hidden;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    .welcome-modal-content::before {
+        content: '';
+        position: absolute;
+        top: 0; right: 0; bottom: 0; left: 0;
+        z-index: -1;
+        margin: -2px; 
+        border-radius: inherit;
+        background: linear-gradient(45deg, var(--neon-pink), var(--neon-blue), var(--neon-green));
+        animation: rotate-border 4s linear infinite;
+    }
+    @keyframes rotate-border {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+    .modal-main-title { font-size: 2.8rem; font-weight: 900; color: #fff; text-shadow: 0 0 8px rgba(255, 255, 255, 0.7); }
+    .neon-subtitle { font-size: 2.5rem; font-weight: 900; color: var(--neon-blue); text-shadow: 0 0 8px var(--neon-blue), 0 0 15px var(--neon-blue), 0 0 25px var(--neon-blue); margin-bottom: 15px; width: 100%; text-align: center; }
+    .welcome-message { font-size: 1.2rem; color: #e0e0e0; margin-bottom: 25px; text-shadow: 0 0 3px rgba(0,0,0,0.5); }
+    .contact-info { margin-top: 25px; border-top: 1px dashed var(--neon-blue); padding-top: 20px; }
+    .contact-info p { font-size: 1.3rem; font-weight: bold; color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); margin-bottom: 15px; }
+    .contact-info a { display: inline-flex; align-items: center; gap: 10px; color: var(--text-color); text-decoration: none; font-size: 1.2rem; margin: 5px 10px; padding: 8px 15px; border: 1px solid var(--neon-blue); border-radius: 8px; transition: all 0.3s ease; }
+    .contact-info a:hover { background-color: var(--neon-blue); color: var(--dark-bg); box-shadow: 0 0 15px var(--neon-blue); transform: scale(1.05); }
+
+    #modal-error-msg { color: var(--neon-pink); margin-top: 15px; font-weight: bold; display: none; }
+    #user-info-form { margin-bottom: 10px; }
+    #start-learning-btn { width: 100%; font-size: 1.2rem; padding: 12px; }
+
+    @media (max-width: 600px) {
+      .welcome-modal-content { padding: 20px 15px; width: 95%; }
+      .neon-subtitle { font-size: 1.8rem; margin-bottom: 10px; }
+      .welcome-message { font-size: 1.0rem; margin-bottom: 20px; }
+      .contact-info { margin-top: 20px; padding-top: 15px; }
+      .contact-info a { font-size: 1.0rem; padding: 8px 12px; display: flex; flex-direction: column; gap: 8px; margin: 8px auto; width: 90%; }
+    }
+
+    .controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0 24px; padding: 16px; background: var(--card-bg); border-radius: 12px; box-shadow: 0 0 10px rgba(0,0,0,.5); }
+    .control-group { display: flex; flex-direction: column; gap: 6px; }
+    .control-group label { color: var(--neon-pink); font-size: .9rem; text-shadow: 0 0 3px var(--neon-pink); }
+    
+    #searchInput { padding: 12px; border-radius: 8px; border: 2px solid var(--neon-blue); background: var(--dark-bg); color: var(--neon-green); font-size: 1.1rem; text-align: left; direction: ltr; width: 100%; transition: border-color var(--transition-speed); }
+    #searchInput:focus { outline: none; border-color: var(--neon-pink); box-shadow: 0 0 10px var(--neon-pink); }
+
+    button { background: var(--neon-green); color: var(--dark-bg); border: 0; padding: 10px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; box-shadow: 0 0 5px var(--neon-green); transition: background-color var(--transition-speed), transform .1s; }
+    button:hover { background: #66ff66; transform: translateY(-2px); }
+    
+    #startQuizBtn { background-color: var(--neon-pink); color: var(--text-color); box-shadow: 0 0 5px var(--neon-pink), 0 0 10px var(--neon-pink); grid-column: 1 / -1; font-size: 1.2rem; }
+    #startQuizBtn:hover { background-color: #ff33d1; }
+
+    #stop-reading-btn { position: fixed; top: 20px; left: 20px; z-index: 1000; background-color: #ff1439; color: white; width: 50px; height: 50px; border-radius: 50%; font-size: 1.5rem; border: 2px solid white; box-shadow: 0 0 10px #ff1439, 0 0 20px #ff1439; display: flex; align-items: center; justify-content: center; }
+    #stop-reading-btn:hover { background-color: #ff4d6a; }
+    
+    /* Pronunciation Counter Styles */
+    #pronunciation-counter {
+        position: fixed;
+        top: 80px;
+        left: 20px;
+        z-index: 999;
+        background: var(--card-bg);
+        border: 2px solid var(--neon-blue);
+        padding: 10px 15px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        font-size: 1.1rem;
+        transition: background-color 0.3s;
+    }
+    body.light-mode #pronunciation-counter { background: #fff; }
+
+    .section-container { margin-top: 24px; }
+    .section-title { font-size: 1.6rem; color: var(--neon-pink); border-bottom: 3px dashed var(--neon-pink); padding-bottom: 6px; margin-bottom: 14px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .word-card { background: var(--card-bg); border: 1px solid var(--neon-blue); border-radius: 12px; padding: 16px; box-shadow: 0 0 10px rgba(0,0,0,.5); transition: transform .2s, border-color var(--transition-speed); cursor: pointer; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+    .word-card:hover { transform: translateY(-4px); border-color: var(--neon-pink); }
+    
+    .word-card.highlight { box-shadow: 0 0 15px 5px var(--highlight-color), 0 0 20px 10px rgba(255,255,0,.3); background: #2e3540; }
+
+    /* Table Cell Highlight */
+    td.highlight { 
+        box-shadow: inset 0 0 15px var(--highlight-color), 0 0 10px var(--highlight-color); 
+        background-color: rgba(255, 255, 0, 0.15) !important; 
+        color: var(--highlight-color);
+        transition: all 0.2s ease;
+    }
+
+    .card-tools { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; z-index: 10; }
+    .tool-btn { background: rgba(0,0,0,0.7); color: var(--neon-blue); border: 1px dashed var(--neon-blue); padding: 5px 8px; border-radius: 6px; font-size: 1rem; cursor: pointer; transition: 0.2s;}
+    .tool-btn:hover { background: var(--neon-blue); color: #000; transform: scale(1.1); }
+    .tool-btn.active-star { background: var(--highlight-color); color: #000; border-color: var(--highlight-color); box-shadow: 0 0 5px var(--highlight-color); }
+    
+    .voice-feedback { margin-top: 5px; font-size: 0.95rem; font-weight: bold; text-align: left; direction: ltr; min-height: 20px;}
+    .voice-feedback.success { color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); }
+    .voice-feedback.error { color: var(--neon-pink); text-shadow: 0 0 5px var(--neon-pink); }
+    
+    .word-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; border: 1px solid var(--neon-green); background: #0b0f14; }
+    .word-card h3 { font-size: 1.35rem; color: var(--neon-blue); margin: 4px 0; text-align: left; }
+    .word-card p { font-size: 1rem; color: var(--text-color); }
+    .arabic-word { font-weight: 700; color: var(--neon-pink); border-bottom: 1px dashed var(--neon-pink); padding-bottom: 4px; margin-bottom: 8px; }
+    .example-sentence { font-style: italic; font-size: .95rem; color: #ccc; margin-top: 8px; border-top: 1px solid rgba(255,255,255,.08); padding-top: 8px; text-align: left; direction: ltr; flex-grow: 1; }
+    .example-sentence .word-to-highlight { background: var(--highlight-color); color: #000; padding: 1px 3px; border-radius: 3px; font-weight: 700; }
+    .img-status { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,.55); color: #fff; padding: 2px 8px; font-size: .8rem; border-radius: 6px; }
+
+    .card-mini-actions { display: flex; gap: 8px; margin-top: 12px; justify-content: center; }
+    .card-mini-actions button { font-size: 0.85rem; padding: 6px 5px; flex: 1; border-radius: 6px; }
+    .btn-play-here { background: var(--neon-blue); color: var(--dark-bg); box-shadow: 0 0 5px var(--neon-blue); }
+    .btn-play-here:hover { background: #66ffff; }
+    .btn-memo-here { background: var(--neon-pink); color: var(--text-color); box-shadow: 0 0 5px var(--neon-pink); }
+    .btn-memo-here:hover { background: #ff33d1; }
+    .btn-review-here { background: var(--highlight-color); color: var(--dark-bg); box-shadow: 0 0 5px var(--highlight-color); }
+    .btn-review-here:hover { background: #ffff66; }
+
+    .progress { margin-top: 8px; height: 8px; background: #222; border-radius: 6px; overflow: hidden; }
+    .progress > span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, var(--neon-green), var(--neon-blue)); transition: width .2s; }
+    #user-info-form input { padding: 10px; border-radius: 6px; border: 1px solid var(--neon-blue); background: var(--dark-bg); color: var(--text-color); font-size: 1rem; text-align: right; width: 100%; box-sizing: border-box; margin-bottom: 10px; }
+    
+    .info-table { width: 100%; border-collapse: collapse; margin-top: 16px; background-color: var(--card-bg); transition: background-color var(--transition-speed); border-radius: 8px; overflow: hidden; direction: ltr; }
+    .info-table th, .info-table td { border: 1px solid var(--neon-blue); padding: 12px; transition: background-color var(--transition-speed); }
+    .info-table th { background-color: #1f2730; color: var(--neon-pink); font-size: 1.1rem; text-align: center; direction: rtl; }
+    .info-table tr:nth-child(even) { background-color: #1a1f26; }
+    .info-table td[lang="en"] { text-align: left; direction: ltr; color: var(--neon-blue); font-weight: bold; }
+    .info-table td:not([lang="en"]) { text-align: right; direction: rtl; }
+    .translated-def { display: block; margin-top: 8px; color: var(--neon-pink); font-size: 0.95rem; font-weight: bold; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 8px; text-shadow: 0 0 2px rgba(0,0,0,0.5); }
+    
+    #quiz-section { padding: 22px; margin-top: 28px; background: var(--card-bg); border-radius: 14px; border: 2px solid var(--neon-green); display: none; }
+    #quiz-section h2 { text-align: center; color: var(--neon-green); text-shadow: 0 0 5px var(--neon-green); margin-bottom: 16px; }
+    #timer-display { text-align: center; font-size: 2.5rem; font-weight: 700; color: var(--neon-pink); text-shadow: 0 0 8px var(--neon-pink); margin-bottom: 20px; }
+    .quiz-question { margin-bottom: 16px; padding: 12px; background: #1f2730; border-radius: 8px; }
+    .quiz-question p { font-weight: 700; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+
+  <div id="welcome-modal-overlay">
+      <div class="welcome-modal-content">
+          <h2 class="neon-subtitle">Mr. Moheb Mousa</h2>
+          <p class="welcome-message">كيف تفكر كطالب متميز</p>
+          
+          <div id="modal-form-container">
+            <form id="user-info-form" onsubmit="return false;">
+              <input type="text" id="userName" placeholder="الاسم ثلاثي" required />
+              <input type="text" id="userGroup" placeholder="المجموعة (مثال: خامسة ابتدائي)" required />
+              <input type="date" id="userDate" required />
+            </form>
+            <button id="start-learning-btn">ابدأ التعلم</button>
+            <p id="modal-error-msg">الرجاء إدخال الاسم والمجموعة أولاً.</p>
+          </div>
+
+          <div class="contact-info">
+              <p>اتصل الآن 📞</p>
+              <a href="tel:01200621226">01200621226</a>
+              <a href="tel:01145540015">01145540015</a>
+          </div>
+      </div>
+  </div>
+
+  <button id="stop-reading-btn" title="إيقاف القراءة">✋️</button>
+
+  <div id="pronunciation-counter">
+    <span style="color: var(--neon-green); font-weight: bold;">نطق صحيح: <span id="correct-count">0</span> ✅</span>
+    <span style="color: var(--neon-pink); font-weight: bold;">نطق خاطئ: <span id="incorrect-count">0</span> ❌</span>
+    <span style="color: var(--neon-blue); font-weight: bold; border-top: 1px dashed var(--neon-blue); padding-top: 5px; margin-top: 5px;">إجمالي الكلمات: <span id="total-words-count">0</span> 📚</span>
+  </div>
+
+  <header>
+    <h1 class="header-title">Primary 5 Unit 5 (Lessons 1 & 2) Second Term</h1>
+  </header>
+
+  <div class="controls">
+    <div class="control-group" style="grid-column: 1 / -1;">
+        <input type="text" id="searchInput" placeholder="🔍 ابحث عن كلمة بالإنجليزية هنا..." />
+    </div>
+
+    <button id="readAllBtn">قراءة الجميع مع التمرير التلقائي</button>
+    <button id="memoriesBtn">Memories</button>
+    <button id="quickReviewBtn">مراجعة سريعة</button>
+    <button id="reviewDiffBtn" style="background: var(--highlight-color); color: var(--dark-bg); box-shadow: 0 0 5px var(--highlight-color);">مراجعة الكلمات الصعبة ⭐</button>
+    
+    <div class="control-group">
+      <label for="speedSlider" id="speedValue">سرعة القراءة: 1.0x</label>
+      <input type="range" id="speedSlider" min="0.5" max="2.0" step="0.1" value="1.0" />
+    </div>
+
+    <div class="control-group">
+      <label for="spellingSpeedSlider" id="spellingSpeedValue">سرعة التهجئة: 0.4x</label>
+      <input type="range" id="spellingSpeedSlider" min="0.1" max="1.0" step="0.1" value="0.4" />
+    </div>
+
+    <button id="modeToggleBtn">الوضع الليلي / النهاري</button>
+    <button id="repeatToggleBtn" data-repeats="1">تكرار: 1 مرة</button>
+    
+    <button id="startQuizBtn">بدء الاختبار ⏱️</button>
+  </div>
+
+  <div class="progress" aria-label="تقدم تحميل الصور">
+    <span id="progressBar"></span>
+  </div>
+
+  <main id="vocabulary-content">
+    <div class="section-container">
+      <h2 class="section-title">مفردات الدرس الأول (Lesson 1)</h2>
+      <button class="read-section-btn" data-section="lesson1-vocab">قراءة هذا القسم</button>
+      <div class="card-grid" id="lesson1-vocab"></div>
+    </div>
+    <div class="section-container">
+      <h2 class="section-title">مفردات الدرس الثاني (Lesson 2)</h2>
+      <button class="read-section-btn" data-section="lesson2-vocab">قراءة هذا القسم</button>
+      <div class="card-grid" id="lesson2-vocab"></div>
+    </div>
+  </main>
+  
+  <div class="section-container">
+    <h2 class="section-title">التعريفات (Definitions)</h2>
+    <button class="read-table-btn" data-section="definitions-table">قراءة الجدول</button>
+    <table class="info-table" id="definitions-table">
+      <thead><tr><th>الكلمة (Word)</th><th>المعنى بالعربية</th><th>التعريف (Definition)</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <div class="section-container">
+    <h2 class="section-title">تصريف الأفعال (Verbs Conjugation)</h2>
+    <button class="read-table-btn" data-section="verbs-table">قراءة الجدول</button>
+    <table class="info-table" id="verbs-table">
+      <thead><tr><th>المعنى</th><th>المضارع (Present)</th><th>الماضي (Past)</th><th>التصريف الثالث (P.P)</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <section id="quiz-section">
+    <h2>اختبار المفردات الشامل</h2>
+    <div id="timer-display">02:00</div>
+    <form id="quiz-form"></form>
+    <button id="submitQuizBtn">إرسال الإجابات</button>
+    <div id="quiz-results"></div>
+  </section>
+
+<script>
+  // ======================= DATA =======================
+  
+  const vocabulary = [
+    // Lesson 1 Vocabulary
+    { en: "the Sun", ar: "الشَّمْس", type: "lesson1", sentence: "<span class='word-to-highlight'>The Sun</span> gives us heat and light." },
+    { en: "Moon", ar: "القَمَر", type: "lesson1", sentence: "We can see the <span class='word-to-highlight'>Moon</span> at night." },
+    { en: "the solar system", ar: "النِّظَامُ الشَّمْسِيُّ", type: "lesson1", sentence: "There are eight planets in <span class='word-to-highlight'>the solar system</span>." },
+    { en: "galaxy", ar: "مَجَرَّة", type: "lesson1", sentence: "Our <span class='word-to-highlight'>galaxy</span> is huge." },
+    { en: "planetarium", ar: "القُبَّةُ السَّمَاوِيَّةُ", type: "lesson1", sentence: "We visited the <span class='word-to-highlight'>planetarium</span> to see the stars." },
+    { en: "space", ar: "فَضَاء", type: "lesson1", sentence: "Astronauts travel into <span class='word-to-highlight'>space</span>." },
+    { en: "rings", ar: "حَلَقَات", type: "lesson1", sentence: "Saturn has beautiful <span class='word-to-highlight'>rings</span>." },
+    { en: "stars", ar: "نُجُوم", type: "lesson1", sentence: "There are many <span class='word-to-highlight'>stars</span> in the sky." },
+    { en: "Milky Way", ar: "مَجَرَّةُ دَرْبِ التَّبَّانَةِ", type: "lesson1", sentence: "We live in the <span class='word-to-highlight'>Milky Way</span>." },
+    { en: "Mercury", ar: "عُطَارِد", type: "lesson1", sentence: "<span class='word-to-highlight'>Mercury</span> is the smallest planet." },
+    { en: "Venus", ar: "الزُّهَرَة", type: "lesson1", sentence: "<span class='word-to-highlight'>Venus</span> is the hottest planet." },
+    { en: "Saturn", ar: "زُحَل", type: "lesson1", sentence: "<span class='word-to-highlight'>Saturn</span> has rings." },
+    { en: "Mars", ar: "المِرِّيخ", type: "lesson1", sentence: "<span class='word-to-highlight'>Mars</span> is the red planet." },
+    { en: "Jupiter", ar: "المُشْتَرِي", type: "lesson1", sentence: "<span class='word-to-highlight'>Jupiter</span> is the biggest planet." },
+    { en: "Uranus", ar: "أُورَانُوس", type: "lesson1", sentence: "<span class='word-to-highlight'>Uranus</span> is a cold planet." },
+    { en: "Neptune", ar: "نِبْتُون", type: "lesson1", sentence: "<span class='word-to-highlight'>Neptune</span> is very far from the sun." },
+    { en: "Earth", ar: "الأَرْض", type: "lesson1", sentence: "We live on <span class='word-to-highlight'>Earth</span>." },
+    { en: "famous for", ar: "مَشْهُورٌ بِـ", type: "lesson1", sentence: "Egypt is <span class='word-to-highlight'>famous for</span> its pyramids." },
+    { en: "iron-rich soil", ar: "تُرْبَةٌ غَنِيَّةٌ بِالحَدِيدِ", type: "lesson1", sentence: "Mars has <span class='word-to-highlight'>iron-rich soil</span>." },
+    { en: "part of", ar: "جُزْءٌ مِنْ", type: "lesson1", sentence: "Earth is <span class='word-to-highlight'>part of</span> the solar system." },
+    
+    // Lesson 2 Vocabulary
+    { en: "female astronaut", ar: "رَائِدَةُ فَضَاءٍ", type: "lesson2", sentence: "Sara Sabry is a famous <span class='word-to-highlight'>female astronaut</span>." },
+    { en: "universe", ar: "الكَوْن / العَالَم", type: "lesson2", sentence: "The <span class='word-to-highlight'>universe</span> is very big." },
+    { en: "dreams", ar: "أَحْلَام", type: "lesson2", sentence: "You must follow your <span class='word-to-highlight'>dreams</span>." },
+    { en: "impossible", ar: "مُسْتَحِيل", type: "lesson2", sentence: "Nothing is <span class='word-to-highlight'>impossible</span>." },
+    { en: "engineer", ar: "مُهَنْدِس", type: "lesson2", sentence: "He works as an <span class='word-to-highlight'>engineer</span>." },
+    { en: "compared to", ar: "مُقَارَنَةً بِـ", type: "lesson2", sentence: "Earth is small <span class='word-to-highlight'>compared to</span> the sun." },
+    { en: "travel into space", ar: "يُسَافِرُ إِلَى الفَضَاءِ", type: "lesson2", sentence: "She wants to <span class='word-to-highlight'>travel into space</span>." }
+  ];
+
+  const definitions = [
+    { word: "Saturn", ar: "زُحَل", definition: "a planet with rings", defAr: "كَوْكَبٌ ذُو حَلَقَاتٍ" },
+    { word: "Mercury", ar: "عُطَارِد", definition: "the smallest planet", defAr: "أَصْغَرُ كَوْكَبٍ" },
+    { word: "Mars", ar: "المِرِّيخ", definition: "the red planet", defAr: "الكَوْكَبُ الأَحْمَرُ" },
+    { word: "galaxy", ar: "مَجَرَّة", definition: "a group of many stars", defAr: "مَجْمُوعَةٌ كَبِيرَةٌ مِنَ النُّجُومِ" }
+  ];
+
+  const verbsList = [
+    // Regular Verbs
+    { ar: "يُسَمِّي / يَذْكُر", present: "name", past: "named", pp: "named" },
+    { ar: "يَسْتَكْشِف", present: "explore", past: "explored", pp: "explored" },
+    { ar: "يُلْهِمُ / يُشَجِّعُ", present: "inspire", past: "inspired", pp: "inspired" },
+    { ar: "يَتَّبِعُ", present: "follow", past: "followed", pp: "followed" },
+    { ar: "يَعْتَقِدُ", present: "believe", past: "believed", pp: "believed" },
+    { ar: "يَشْرَحُ / يُفَسِّرُ", present: "explain", past: "explained", pp: "explained" },
+    { ar: "يَصِفُ", present: "describe", past: "described", pp: "described" },
+    { ar: "يَتَخَيَّلُ", present: "imagine", past: "imagined", pp: "imagined" },
+    { ar: "يُدْرِكُ", present: "realize", past: "realized", pp: "realized" },
+    // Irregular Verbs
+    { ar: "يَجْعَل", present: "make", past: "made", pp: "made" },
+    { ar: "يَرَى", present: "see", past: "saw", pp: "seen" }
+  ];
+
+  // ======================= SCRIPT =======================
+  const IMG_CACHE_PREFIX = 'mrmoheb_base64_v5_';
+  const PIXABAY_API_KEY = '55174889-4beb6fc649c3c3d196c624ce0';
+  
+  // Variables for Mic, Star features and Counters
+  let difficultWords = JSON.parse(localStorage.getItem('mrmoheb_diff_words') || '[]');
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let correctPronunciations = 0;
+  let incorrectPronunciations = 0;
+
+  let quizTimerInterval = null;
+  let timeLeft = 120;
+
+  function toKey(term){ return IMG_CACHE_PREFIX + term.toLowerCase(); }
+  function readCache(term){ try { return localStorage.getItem(toKey(term)); } catch(e){ return null; } }
+  function writeCache(term, dataUrl){ try { localStorage.setItem(toKey(term), dataUrl); } catch(e){} }
+
+  async function searchPixabay(term, isReload = false) {
+    const url = `https://pixabay.com/api/?key=${PIXABAY_API_KEY}&q=${encodeURIComponent(term)}&image_type=photo&orientation=horizontal&safesearch=true&per_page=20`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Pixabay API ' + res.status);
+    const data = await res.json();
+    if (!data.hits || data.hits.length === 0) throw new Error('No results from Pixabay');
+    let index = 0;
+    if (isReload) index = Math.floor(Math.random() * data.hits.length);
+    return data.hits[index].webformatURL;
+  }
+
+  async function blobToDataUrl(blob){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function getRealImageBase64(term, forcePixabay = false, isReload = false) {
+    const cached = readCache(term);
+    if (cached && !isReload) return cached; 
+    try {
+        const finalUrl = await searchPixabay(term, isReload);
+        const res = await fetch(finalUrl, { cache: 'no-store' });
+        const blob = await res.blob();
+        const dataUrl = await blobToDataUrl(blob);
+        writeCache(term, dataUrl);
+        return dataUrl;
+    } catch(e) {
+        throw new Error('Failed to fetch image for: ' + term);
+    }
+  }
+  
+  async function hydrateImagesForAllCards(){
+    const cards = Array.from(document.querySelectorAll('.word-card'));
+    const bar = document.getElementById('progressBar');
+    let done = 0;
+    const updateBar = () => { bar.style.width = `${Math.round((done / Math.max(cards.length,1))*100)}%`; };
+    updateBar();
+    for (const card of cards){
+      const term = card.dataset.en;
+      const imgEl = card.querySelector('img');
+      const status = card.querySelector('.img-status');
+      status.textContent = 'جاري جلب صورة…';
+      try {
+        const dataUrl = await getRealImageBase64(term);
+        imgEl.src = dataUrl;
+        status.textContent = 'تم التضمين ✓';
+      } catch(e){
+        status.textContent = 'تعذّر الجلب ↻';
+      }
+      done++; updateBar();
+      if(done < cards.length) await new Promise(r=>setTimeout(r, 150));
+    }
+  }
+
+  // --- TTS ---
+  const synthesis = window.speechSynthesis;
+  let isReading = false, readingQueue = [], currentHighlightElement = null, repeatCount = 1, speechRate = 1.0, spellingRate = 0.4;
+
+  function speak(text, lang = 'en-US', cb = () => {}, forceRate = null) {
+    if (!synthesis) return;
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = lang;
+    u.rate = (forceRate !== null) ? forceRate : speechRate;
+    u.onend = cb;
+    synthesis.speak(u);
+  }
+
+  function highlightElement(el) {
+    if (currentHighlightElement) currentHighlightElement.classList.remove('highlight');
+    if (el) { 
+        el.classList.add('highlight'); 
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' }); 
+        currentHighlightElement = el; 
+    } 
+    else currentHighlightElement = null;
+  }
+
+  function stopReading() {
+    isReading = false;
+    synthesis && synthesis.cancel();
+    readingQueue = [];
+    highlightElement(null);
+    document.getElementById('readAllBtn').textContent = 'قراءة الجميع مع التمرير التلقائي';
+    document.querySelectorAll('.read-section-btn, .read-table-btn, .read-deriv-btn').forEach(btn => btn.textContent = btn.textContent.replace('إيقاف', 'قراءة'));
+    const memBtn = document.getElementById('memoriesBtn');
+    if (memBtn) memBtn.textContent = 'Memories';
+    const reviewBtn = document.getElementById('quickReviewBtn');
+    if (reviewBtn) reviewBtn.textContent = 'مراجعة سريعة';
+    if (quizTimerInterval) clearInterval(quizTimerInterval);
+  }
+
+  function playQueue() {
+    if (!isReading || readingQueue.length === 0) { stopReading(); return; }
+    const { el, text, lang, rate } = readingQueue.shift();
+    highlightElement(el);
+    speak(text, lang, playQueue, rate || null);
+  }
+
+  function startSingleCardReading(card){
+    const en = card.dataset.en, ar = card.dataset.ar, sentence = card.querySelector('.example-sentence').textContent;
+    isReading = true; readingQueue = [];
+    for (let i = 0; i < repeatCount; i++) {
+      readingQueue.push({ el: card, text: ar, lang: 'ar-EG' });
+      readingQueue.push({ el: card, text: en, lang: 'en-US' });
+      if (sentence) readingQueue.push({ el: card, text: sentence, lang: 'en-US' });
+    }
+    playQueue();
+  }
+  
+  function handleCardClick(card){
+    if (window.event && window.event.ctrlKey) { reloadCardImage(card); return; }
+    if (isReading) { stopReading(); setTimeout(() => startSingleCardReading(card), 100); } 
+    else { startSingleCardReading(card); }
+  }
+
+  function startReading(elements, btn, isTable = false, tableId = null){
+    if (isReading) { stopReading(); return; }
+    btn.textContent = 'إيقاف القراءة';
+    isReading = true; readingQueue = [];
+    elements.forEach(el => {
+      if (isTable) {
+        const cells = el.querySelectorAll('td');
+        for (let i = 0; i < repeatCount; i++) {
+            cells.forEach((cell, index) => {
+                const spans = cell.querySelectorAll('span');
+                if (spans.length > 0) {
+                    spans.forEach(span => {
+                        const text = span.textContent.trim();
+                        if (text) {
+                            const lang = span.getAttribute('lang') === 'en' ? 'en-US' : 'ar-EG';
+                            readingQueue.push({ el: cell, text: text, lang: lang });
+                        }
+                    });
+                } else {
+                    const text = cell.textContent.trim();
+                    if (text) {
+                        const lang = cell.getAttribute('lang') === 'en' ? 'en-US' : 'ar-EG';
+                        readingQueue.push({ el: cell, text: text, lang: lang });
+                    }
+                }
+            });
+        }
+      } else {
+        const en = el.dataset.en, ar = el.dataset.ar, sentence = el.querySelector('.example-sentence').textContent;
+        for (let i = 0; i < repeatCount; i++) {
+          readingQueue.push({ el, text: ar, lang: 'ar-EG' });
+          readingQueue.push({ el, text: en, lang: 'en-US' });
+          if (sentence) readingQueue.push({ el, text: sentence, lang: 'en-US' });
+        }
+      }
+    });
+    playQueue();
+  }
+
+  function startMemoriesReading(elements, btn) {
+    if (isReading) { stopReading(); return; }
+    btn.textContent = 'إيقاف المراجعة';
+    isReading = true; readingQueue = [];
+    const totalRepeats = 4;
+    elements.forEach(el => {
+      const en = el.dataset.en;
+      const ar = el.dataset.ar;
+      const en_spelled = en.split('').join(', '); 
+      for (let i = 0; i < totalRepeats; i++) {
+        readingQueue.push({ el, text: en, lang: 'en-US' });
+        readingQueue.push({ el, text: ar, lang: 'ar-EG' });
+        readingQueue.push({ el, text: ar, lang: 'ar-EG' });
+        readingQueue.push({ el, text: en, lang: 'en-US' });
+        readingQueue.push({ el, text: en_spelled, lang: 'en-US', rate: spellingRate });
+      }
+    });
+    playQueue();
+  }
+
+  function startQuickReviewReading(elements, btn) {
+    if (isReading) { stopReading(); return; }
+    btn.textContent = 'إيقاف المراجعة السريعة';
+    isReading = true; readingQueue = [];
+    const totalRepeats = 2; 
+    elements.forEach(el => {
+      const en = el.dataset.en;
+      const ar = el.dataset.ar;
+      for (let i = 0; i < totalRepeats; i++) {
+        readingQueue.push({ el, text: ar, lang: 'ar-EG' });
+        readingQueue.push({ el, text: en, lang: 'en-US' });
+        readingQueue.push({ el, text: en, lang: 'en-US' });
+        readingQueue.push({ el, text: ar, lang: 'ar-EG' });
+      }
+    });
+    playQueue();
+  }
+
+  function shuffleArray(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+  
+  function generateQuiz() {
+    const sec = document.getElementById('quiz-section');
+    const form = document.getElementById('quiz-form');
+    form.innerHTML = '';
+
+    let allQuestions = [];
+
+    vocabulary.forEach(v => {
+        if (Math.random() < 0.5) {
+            let wrong = shuffleArray(vocabulary.filter(w => w.en !== v.en).map(w => w.en)).slice(0, 3);
+            allQuestions.push({ q: `ما معنى <span style="color:var(--neon-pink)">${v.ar}</span> بالإنجليزية؟`, ans: v.en, wrong: wrong, dir: 'ltr' });
+        } else {
+            let wrong = shuffleArray(vocabulary.filter(w => w.ar !== v.ar).map(w => w.ar)).slice(0, 3);
+            allQuestions.push({ q: `What is the meaning of <span style="color:var(--neon-pink)">${v.en}</span>?`, ans: v.ar, wrong: wrong, dir: 'rtl' });
+        }
+    });
+
+    definitions.forEach(d => {
+        let wrong = shuffleArray(definitions.filter(w => w.word !== d.word).map(w => w.word)).slice(0, 3);
+        allQuestions.push({ q: `Which word means: <span style="color:var(--neon-pink)">${d.definition}</span>?`, ans: d.word, wrong: wrong, dir: 'ltr' });
+    });
+
+    verbsList.forEach(v => {
+        let wrong = shuffleArray(verbsList.filter(w => w.past !== v.past).map(w => w.past)).slice(0, 3);
+        while(wrong.length < 3) wrong.push("played", "went", "saw").slice(0, 3 - wrong.length); 
+        allQuestions.push({ q: `What is the past tense of <span style="color:var(--neon-pink)">${v.present}</span>?`, ans: v.past, wrong: wrong, dir: 'ltr' });
+    });
+
+    allQuestions = shuffleArray(allQuestions);
+    const maxQuestions = Math.min(20, allQuestions.length);
+    const selectedQuestions = allQuestions.slice(0, maxQuestions);
+
+    if (selectedQuestions.length === 0) { sec.style.display = 'none'; return; }
+
+    selectedQuestions.forEach((item, idx) => {
+        const choices = shuffleArray([item.ans, ...item.wrong]);
+        const qDiv = document.createElement('div');
+        qDiv.className = 'quiz-question';
+        qDiv.innerHTML = `<p>${idx + 1}. ${item.q}</p>`;
+        
+        choices.forEach(c => {
+            if (!c) return;
+            const id = `q${idx}-${c.replace(/[^a-zA-Z0-9\u0600-\u06FF\s]/g, '-')}`;
+            const styleDir = item.dir === 'rtl' ? 'direction: rtl; text-align: right;' : 'direction: ltr; text-align: left;';
+            qDiv.innerHTML += `
+                <div style="margin: 8px 0; ${styleDir}">
+                    <input type="radio" id="${id}" name="question${idx}" value="${c}" data-correct="${c === item.ans}">
+                    <label for="${id}" style="margin-right: 8px;">${c}</label>
+                </div>`;
+        });
+        form.appendChild(qDiv);
+    });
+  }
+  
+  function startQuizTimer() {
+    timeLeft = 120; 
+    const timerEl = document.getElementById('timer-display');
+    timerEl.textContent = '02:00';
+    timerEl.style.color = 'var(--neon-green)';
+
+    quizTimerInterval = setInterval(() => {
+        timeLeft--;
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerEl.textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        if (timeLeft <= 10) timerEl.style.color = 'var(--neon-pink)';
+        if (timeLeft <= 0) {
+            clearInterval(quizTimerInterval);
+            timerEl.textContent = 'الوقت انتهى!';
+            submitQuiz();
+        }
+    }, 1000);
+  }
+
+  function beginQuiz() {
+    const mainTitle = document.querySelector('.header-title').textContent.trim();
+    document.querySelector('#quiz-section h2').textContent = `اختبار شامل: ${mainTitle}`;
+    
+    document.getElementById('vocabulary-content').style.display = 'none';
+    document.querySelectorAll('.section-container').forEach(el => el.style.display = 'none');
+    document.querySelector('.controls').style.display = 'none';
+    
+    document.getElementById('quiz-section').style.display = 'block';
+    generateQuiz(); 
+    startQuizTimer();
+  }
+
+  // --- NATIVE JAVASCRIPT CONFETTI (No External Libraries Needed) ---
+  function createConfettiParticle(color) {
+      const confetti = document.createElement('div');
+      confetti.style.position = 'fixed';
+      confetti.style.left = Math.random() * 100 + 'vw';
+      confetti.style.top = '-20px';
+      confetti.style.width = Math.random() * 10 + 5 + 'px';
+      confetti.style.height = Math.random() * 20 + 10 + 'px';
+      confetti.style.backgroundColor = color;
+      confetti.style.zIndex = '999999';
+      confetti.style.transform = 'rotate(' + Math.random() * 360 + 'deg)';
+      confetti.style.pointerEvents = 'none'; 
+      document.body.appendChild(confetti);
+
+      const animation = confetti.animate([
+          { transform: `translate3d(0,0,0) rotate(0deg)`, opacity: 1 },
+          { transform: `translate3d(${Math.random()*200 - 100}px, 100vh, 0) rotate(${Math.random()*720}deg)`, opacity: 0 }
+      ], {
+          duration: Math.random() * 2000 + 1500,
+          easing: 'cubic-bezier(.37,0,.63,1)'
+      });
+      
+      animation.onfinish = () => confetti.remove();
+  }
+
+  function triggerCelebration() {
+      const popSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3'); 
+      popSound.volume = 0.5;
+      popSound.play().catch(e => console.log('Audio error', e));
+
+      const colors = ['#ff00c1', '#00ffff', '#39ff14', '#ffff00'];
+      for (let i = 0; i < 150; i++) {
+          setTimeout(() => {
+              createConfettiParticle(colors[Math.floor(Math.random() * colors.length)]);
+          }, i * 10); 
+      }
+  }
+
+  function toggleDifficult(card, btn) {
+      const en = card.dataset.en;
+      if (difficultWords.includes(en)) {
+          difficultWords = difficultWords.filter(w => w !== en);
+          btn.classList.remove('active-star');
+      } else {
+          difficultWords.push(en);
+          btn.classList.add('active-star');
+      }
+      localStorage.setItem('mrmoheb_diff_words', JSON.stringify(difficultWords));
+  }
+
+  // === الإصلاح الذكي لدالة المايكروفون ===
+  function startVoiceLab(card) {
+      if(!SpeechRec) { alert('عذراً، متصفحك لا يدعم ميزة المايكروفون. يرجى استخدام متصفح جوجل كروم.'); return; }
+      
+      const targetWord = card.dataset.en.toLowerCase().replace(/[^a-z\s]/g, '').trim();
+      const feedbackEl = card.querySelector('.voice-feedback');
+      feedbackEl.textContent = "يستمع الآن... قل الكلمة 🎤";
+      feedbackEl.className = 'voice-feedback';
+
+      const rec = new SpeechRec();
+      rec.lang = 'en-US';
+      rec.interimResults = false;
+      rec.maxAlternatives = 1;
+
+      rec.onresult = (e) => {
+          const spoken = e.results[0][0].transcript.toLowerCase().replace(/[^a-z\s]/g, '').trim();
+          if(spoken === targetWord || spoken.includes(targetWord) || targetWord.includes(spoken)) {
+              feedbackEl.textContent = `نطق ممتاز! ✅ (${spoken})`;
+              feedbackEl.classList.add('success');
+              triggerCelebration(); 
+              correctPronunciations++;
+              document.getElementById('correct-count').textContent = correctPronunciations;
+          } else {
+              feedbackEl.textContent = `حاول مجدداً ❌ (سمعت: ${spoken})`;
+              feedbackEl.classList.add('error');
+              speak(targetWord, 'en-US', () => {}, 0.85);
+              incorrectPronunciations++;
+              document.getElementById('incorrect-count').textContent = incorrectPronunciations;
+          }
+      };
+
+      // معالجة الأخطاء بشكل تفصيلي لتحديد المشكلة
+      rec.onerror = (e) => { 
+          let errorMessage = "لم أتمكن من السماع.";
+          
+          if (e.error === 'not-allowed') {
+              if (window.location.protocol === 'file:') {
+                  errorMessage = "تحذير: المايكروفون لا يعمل عند فتح الملف مباشرة. يرجى تشغيله عبر Live Server.";
+              } else {
+                  errorMessage = "تم رفض الصلاحية. تأكد من السماح للمتصفح باستخدام المايكروفون.";
+              }
+          } else if (e.error === 'network') {
+              errorMessage = "لا يوجد اتصال بالإنترنت. هذه الميزة تتطلب إنترنت.";
+          } else if (e.error === 'no-speech') {
+              errorMessage = "لم أسمع شيئاً. يرجى التحدث بصوت أوضح.";
+          } else if (e.error === 'audio-capture') {
+              errorMessage = "لم يتم العثور على مايكروفون موصل بالجهاز.";
+          } else {
+              errorMessage = `حدث خطأ: ${e.error}`;
+          }
+
+          feedbackEl.textContent = errorMessage; 
+          feedbackEl.classList.add('error');
+      };
+
+      // إضافة إغلاق آمن
+      rec.onend = () => {
+          if (feedbackEl.textContent.includes("يستمع الآن")) {
+              feedbackEl.textContent = "انتهى وقت الاستماع. اضغط المايكروفون للتجربة مجدداً.";
+              feedbackEl.classList.add('error');
+          }
+      };
+
+      try {
+          rec.start();
+      } catch (error) {
+          feedbackEl.textContent = "المايكروفون قيد الاستخدام بالفعل.";
+          feedbackEl.classList.add('error');
+      }
+  }
+
+  function submitQuiz(){
+    clearInterval(quizTimerInterval);
+    const results=document.getElementById('quiz-results'), total=document.querySelectorAll('.quiz-question').length; let correct=0;
+    const userName=document.getElementById('userName').value.trim(), userGroup=document.getElementById('userGroup').value.trim(), userDate=document.getElementById('userDate').value;
+    
+    if(!userName||!userGroup||!userDate){results.innerHTML=`<h3 style="color:var(--neon-pink);">الرجاء إكمال بياناتك في النافذة الترحيبية أولاً!</h3>`; return;}
+    
+    for(let i=0;i<total;i++){
+        const sel=document.querySelector(`input[name="question${i}"]:checked`); 
+        if(sel&&sel.dataset.correct==='true') correct++;
+    }
+    
+    const score=Math.round((correct/total)*20);
+    results.innerHTML=`<h3>✅ النتيجة: ${score} من 20</h3><p>سيتم الآن إرسال نتيجتك عبر واتساب.</p>`;
+    
+    if (score >= 10) triggerCelebration();
+
+    const msg=`*نتيجتي في اختبار Mr Moheb Mousa الشامل*\n*الاسم*: ${userName}\n*المجموعة*: ${userGroup}\n*التاريخ*: ${userDate}\n*الدرجة*: ${score}/20`;
+    setTimeout(()=>window.open(`https://wa.me/201200621226?text=${encodeURIComponent(msg)}`, '_blank'), 2000);
+    
+    document.getElementById('submitQuizBtn').disabled = true;
+    document.getElementById('timer-display').style.display = 'none';
+    document.querySelectorAll('#quiz-form input[type="radio"]').forEach(radio => radio.disabled = true);
+  }
+
+  async function reloadCardImage(card){
+    const term = card.dataset.en; 
+    try { localStorage.removeItem(toKey(term)); } catch(e){}
+    const status = card.querySelector('.img-status'); 
+    status.textContent = 'إعادة الجلب…';
+    try {
+        const dataUrl = await getRealImageBase64(term, true, true); 
+        card.querySelector('img').src = dataUrl; 
+        status.textContent = 'تم ✓';
+    } catch(e){ status.textContent = 'فشل ↻'; }
+  }
+
+  function populateExtraTables() {
+    const defBody = document.querySelector('#definitions-table tbody');
+    definitions.forEach(item => {
+        defBody.innerHTML += `
+            <tr>
+                <td lang="en">${item.word}</td>
+                <td>${item.ar}</td>
+                <td>
+                    <span lang="en">${item.definition}</span>
+                    <span class="translated-def" dir="rtl">${item.defAr}</span>
+                </td>
+            </tr>`;
+    });
+
+    const verbsBody = document.querySelector('#verbs-table tbody');
+    verbsList.forEach(item => {
+        verbsBody.innerHTML += `
+            <tr>
+                <td>${item.ar}</td>
+                <td lang="en">${item.present}</td>
+                <td lang="en">${item.past}</td>
+                <td lang="en">${item.pp}</td>
+            </tr>`;
+    });
+  }
+
+  function initialize(){
+    const l1Grid = document.getElementById('lesson1-vocab');
+    const l2Grid = document.getElementById('lesson2-vocab');
+    
+    vocabulary.forEach(w => {
+      const c = document.createElement('div'); 
+      c.className = 'word-card'; 
+      c.dataset.en = w.en; 
+      c.dataset.ar = w.ar; 
+      const isFav = difficultWords.includes(w.en) ? 'active-star' : '';
+      c.innerHTML = `
+          <div class="card-tools">
+            <button class="tool-btn btn-mic" title="فحص النطق بالمايكروفون">🎤</button>
+            <button class="tool-btn btn-star ${isFav}" title="تحديد ككلمة صعبة">⭐</button>
+            <button class="tool-btn reload-btn" title="تغيير الصورة">↻</button>
+          </div>
+          <span class="img-status">...</span>
+          <img alt="${w.en}" loading="lazy">
+          <p class="arabic-word">${w.ar}</p>
+          <h3>${w.en}</h3>
+          <p class="example-sentence" dir="ltr">${w.sentence}</p>
+          <div class="voice-feedback"></div>
+          <div class="card-mini-actions">
+            <button class="btn-play-here" title="قراءة من هذه الكلمة حتى النهاية">▶️ قراءة</button>
+            <button class="btn-memo-here" title="تحفيظ من هذه الكلمة حتى النهاية">🧠 تحفيظ</button>
+            <button class="btn-review-here" title="مراجعة سريعة من هذه الكلمة حتى النهاية">⚡ مراجعة</button>
+          </div>
+      `;
+      if (w.type === 'lesson1') l1Grid.appendChild(c);
+      else if (w.type === 'lesson2') l2Grid.appendChild(c);
+    });
+    
+    if(!l1Grid.children.length) l1Grid.parentElement.style.display='none';
+    if(!l2Grid.children.length) l2Grid.parentElement.style.display='none';
+
+    // تحديث عداد إجمالي الكلمات (عدد البطاقات التي تحتوي على زر المايكروفون)
+    document.getElementById('total-words-count').textContent = vocabulary.length;
+    
+    populateExtraTables();
+
+    document.querySelectorAll('.word-card').forEach(c => {
+      c.addEventListener('click', () => handleCardClick(c)); 
+      
+      c.querySelector('.btn-mic').addEventListener('click', (e) => { e.stopPropagation(); startVoiceLab(c); });
+      c.querySelector('.btn-star').addEventListener('click', (e) => { e.stopPropagation(); toggleDifficult(c, e.target); });
+      c.querySelector('.reload-btn').addEventListener('click', e => { e.stopPropagation(); reloadCardImage(c); });
+      
+      c.querySelector('.btn-play-here').addEventListener('click', e => {
+          e.stopPropagation();
+          const visibleCards = [...document.querySelectorAll('.word-card')].filter(card => card.style.display !== 'none');
+          const startIndex = visibleCards.indexOf(c);
+          if (startIndex !== -1) startReading(visibleCards.slice(startIndex), document.getElementById('readAllBtn'));
+      });
+      c.querySelector('.btn-memo-here').addEventListener('click', e => {
+          e.stopPropagation();
+          const visibleCards = [...document.querySelectorAll('.word-card')].filter(card => card.style.display !== 'none');
+          const startIndex = visibleCards.indexOf(c);
+          if (startIndex !== -1) startMemoriesReading(visibleCards.slice(startIndex), document.getElementById('memoriesBtn'));
+      });
+      c.querySelector('.btn-review-here').addEventListener('click', e => {
+          e.stopPropagation();
+          const visibleCards = [...document.querySelectorAll('.word-card')].filter(card => card.style.display !== 'none');
+          const startIndex = visibleCards.indexOf(c);
+          if (startIndex !== -1) startQuickReviewReading(visibleCards.slice(startIndex), document.getElementById('quickReviewBtn'));
+      });
+    });
+
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase().trim();
+        document.querySelectorAll('.word-card').forEach(card => {
+            const enWord = card.dataset.en.toLowerCase();
+            card.style.display = enWord.includes(term) ? 'flex' : 'none';
+        });
+    });
+
+    document.getElementById('reviewDiffBtn').addEventListener('click', () => {
+        const cards = document.querySelectorAll('.word-card');
+        let hasDifficult = false;
+        cards.forEach(c => {
+            if (difficultWords.includes(c.dataset.en)) {
+                c.style.display = 'flex';
+                hasDifficult = true;
+            } else {
+                c.style.display = 'none';
+            }
+        });
+        if (!hasDifficult) {
+            alert('لا توجد كلمات صعبة محفوظة حالياً.');
+            cards.forEach(c => c.style.display = 'flex');
+        }
+    });
+    
+    document.getElementById('readAllBtn').addEventListener('click', e => {
+        const visibleCards = [...document.querySelectorAll('.word-card')].filter(c => c.style.display !== 'none');
+        startReading(visibleCards, e.target);
+    });
+    document.getElementById('memoriesBtn').addEventListener('click', e => {
+        const visibleCards = [...document.querySelectorAll('.word-card')].filter(c => c.style.display !== 'none');
+        startMemoriesReading(visibleCards, e.target);
+    });
+    document.getElementById('quickReviewBtn').addEventListener('click', e => {
+        const visibleCards = [...document.querySelectorAll('.word-card')].filter(c => c.style.display !== 'none');
+        startQuickReviewReading(visibleCards, e.target);
+    });
+
+    document.getElementById('submitQuizBtn').addEventListener('click',submitQuiz);
+    
+    const modalOverlay=document.getElementById('welcome-modal-overlay');
+    document.getElementById('start-learning-btn').addEventListener('click',()=>{
+      const userName=document.getElementById('userName'), userGroup=document.getElementById('userGroup');
+      if(userName.value.trim()&&userGroup.value.trim()){modalOverlay.classList.add('hidden');hydrateImagesForAllCards();}
+      else{document.getElementById('modal-error-msg').style.display='block';}
+    });
+
+    document.getElementById('stop-reading-btn').addEventListener('click',stopReading);
+    document.getElementById('startQuizBtn').addEventListener('click', beginQuiz);
+
+    document.querySelectorAll('.read-section-btn').forEach(b=>b.addEventListener('click',e=>{
+        const visibleCards = [...document.getElementById(e.target.dataset.section).querySelectorAll('.word-card')].filter(c => c.style.display !== 'none');
+        startReading(visibleCards, e.target);
+    }));
+    
+    document.querySelectorAll('.read-table-btn').forEach(b=>b.addEventListener('click',e=>{
+        const tableId = e.target.dataset.section;
+        const rows = [...document.getElementById(tableId).querySelectorAll('tbody tr')];
+        startReading(rows, e.target, true, tableId); 
+    }));
+
+    document.getElementById('speedSlider').addEventListener('input',e=>{speechRate=parseFloat(e.target.value); document.getElementById('speedValue').textContent=`سرعة القراءة: ${speechRate.toFixed(1)}x`;});
+    document.getElementById('spellingSpeedSlider').addEventListener('input',e=>{spellingRate=parseFloat(e.target.value); document.getElementById('spellingSpeedValue').textContent=`سرعة التهجئة: ${spellingRate.toFixed(1)}x`;});
+    document.getElementById('modeToggleBtn').addEventListener('click',()=>document.body.classList.toggle('light-mode'));
+    document.getElementById('repeatToggleBtn').addEventListener('click',e=>{repeatCount=(repeatCount%3)+1; e.target.textContent=`تكرار: ${repeatCount}x`;});
+    const dateInput=document.getElementById('userDate'); if(dateInput)dateInput.valueAsDate=new Date();
+  }
+
+  window.addEventListener('load', initialize);
+</script>
+</body>
+</html>
